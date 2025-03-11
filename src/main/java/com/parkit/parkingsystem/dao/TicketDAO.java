@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -96,11 +97,33 @@ public class TicketDAO {
 			PreparedStatement ps = con.prepareStatement(DBConstants.GET_ALL_TICKET);
 			ps.setString(1, vehicleRegNumber);
 			ResultSet rs = ps.executeQuery();
-			size = rs.getFetchSize();
+			if (rs.next()) {
+				size = rs.getInt(1);
+			}
+
+			return size;
 		} catch (Exception ex) {
 			logger.error("Error fetching ticket count", ex);
 		}
 		return size;
+	}
+
+	public boolean updateTicketInTime(String vehicleRegNumber, Date inTime) {
+		Connection con = null;
+		try {
+			con = dataBaseConfig.getConnection();
+			PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET_IN_TIME);
+			ps.setTimestamp(1, new Timestamp(inTime.getTime()));
+			ps.setString(2, vehicleRegNumber);
+			ps.executeUpdate();
+			return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
+		} finally {
+			dataBaseConfig.closeConnection(con);
+		}
+
 	}
 
 }
