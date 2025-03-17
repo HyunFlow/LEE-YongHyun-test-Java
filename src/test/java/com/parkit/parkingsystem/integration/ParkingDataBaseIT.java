@@ -73,7 +73,7 @@ public class ParkingDataBaseIT {
 
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 		parkingService.processIncomingVehicle();
-		Thread.sleep(1000);
+
 		parkingService.processExitingVehicle();
 
 		Ticket ticket = ticketDAO.getTicket("ABCDEF");
@@ -106,9 +106,7 @@ public class ParkingDataBaseIT {
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 		parkingService.processIncomingVehicle();
 		Date inTime = new Date(System.currentTimeMillis() - (60 * 60 * 1000));
-		java.util.Date d = new java.util.Date(System.currentTimeMillis() - (2 * 60 * 60 * 1000));
 		ticketDAO.updateTicketInTime("ABCDEF", inTime);
-		System.out.println("Reccurring user count : " + ticketDAO.getNbTicket("ABCDEF"));
 		parkingService.processExitingVehicle();
 
 		Ticket ticket = ticketDAO.getTicket("ABCDEF");
